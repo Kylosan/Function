@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
 			
 			EditText ed1 = (EditText) findViewById(R.id.editText1);
 			EditText ed2 = (EditText) findViewById(R.id.editText2);
-			EditText ed3 = (EditText) findViewById(R.id.editText3);
+			final EditText ed3 = (EditText) findViewById(R.id.editText3);
 		
 			
 			try														//Sprawdzanie poprawnoœci danych dla argumentu A
@@ -70,13 +70,28 @@ public class MainActivity extends Activity {
 			}
 			try														//Sprawdzanie poprawnoœci danych dla argumentu A
 			{
-				c=Float.parseFloat(ed3.getText().toString());
+				if(ed3.getText().length() > 0) {
+					c=Float.parseFloat(ed3.getText().toString());
+				}
 			}
 			catch(Exception e)					
 			{
 				ed3.setText(getString(R.string.bad_value));			//Powiadomienie gdy dane nie s¹ poprawne
 				return;
 			}
+			
+			MainActivity.this.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					if(ed3.getText().length() > 0) {
+						MainActivity.this.dravview.setQuadraticFunction(a, b, c);
+					} else {
+						MainActivity.this.dravview.setLinearFunction(a, b);
+					}
+				}
+				
+			});
 			
 		}
 	}

@@ -9,11 +9,10 @@ import android.view.View;
 
 public class DravView extends View 
 {
-	private static final int UNIT = 20; // Unit in pixels
+	private static final float UNIT = 20f; // Unit in pixels
 	
 	private Paint fPaint, lPaint;
-	
-	
+	private Float a, b, c;
 	
 	public DravView(Context context)
 	{
@@ -32,6 +31,20 @@ public class DravView extends View
 		Init();
 	}
 	
+	public void setQuadraticFunction(float a, float b, float c) {
+		this.a = a;
+		this.b = b;
+		this.c = c;
+		this.invalidate();
+	}
+	
+	public void setLinearFunction(float a, float b) {
+		this.a = a;
+		this.b = b;
+		this.c = null;
+		this.invalidate();
+	}
+	
 	private void Init()
 	{
 		fPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -47,9 +60,11 @@ public class DravView extends View
 		float vWidth = this.getWidth();
 		float vHeight = this.getHeight();
 		
+		//Draw axises
 		canvas.drawLine(vWidth / 2f, 0f, vWidth / 2f, vHeight, lPaint);
 		canvas.drawLine(0f, vHeight / 2f, vWidth, vHeight / 2f, lPaint);
 		
+		// Draw unit lines
 		for(int i = 1; i < vWidth / 2f / UNIT; i++) {
 			canvas.drawLine(
 					vWidth / 2f - i * UNIT,
@@ -89,10 +104,34 @@ public class DravView extends View
 					lPaint
 			);
 		}
+		//Draw arrows
 		canvas.drawLine(vWidth / 2f, 0f, vWidth / 2f + UNIT / 2f, UNIT / 3f, lPaint);
 		canvas.drawLine(vWidth / 2f, 0f, vWidth / 2f - UNIT / 2f, UNIT / 3f, lPaint);
 		
 		canvas.drawLine(vWidth, vHeight / 2f, vWidth - UNIT / 3f, vHeight / 2f - UNIT / 2f, lPaint);
 		canvas.drawLine(vWidth, vHeight / 2f, vWidth - UNIT / 3f, vHeight / 2f + UNIT / 2f, lPaint);
+		
+		//Draw function
+		if(a != null && b != null) {
+			float y;
+			Float lastY = null, lastX = null, currY = null, currX = null;
+			
+			for(float x = -vWidth / 2f; x <= vWidth / 2f; x += 0.05f) {
+				if(c != null) {
+					y = a * x * x + b * x + c;
+				} else {
+					y = a * x + b; 
+				}
+				currX = x * UNIT + vWidth / 2f;
+				currY = vHeight - y * UNIT - vHeight / 2f;
+				
+				if(lastX != null && lastY != null) {
+					canvas.drawLine(lastX, lastY, currX, currY, fPaint);
+				}
+				
+				lastX = currX;
+				lastY = currY;
+			}
+		}
 	}
 }
