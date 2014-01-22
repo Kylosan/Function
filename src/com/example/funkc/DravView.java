@@ -4,19 +4,17 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.EditText;
 
 public class DravView extends View 
 {
-	MainActivity main;
-	private Paint m_paint;
-	Path path = new Path();
-	float m_x;
-	float m_y;
+	private static final int UNIT = 20; // Unit in pixels
+	
+	private Paint fPaint, lPaint;
+	
+	
+	
 	public DravView(Context context)
 	{
 		super(context);
@@ -28,34 +26,73 @@ public class DravView extends View
 		super(context, attrs);
 		Init();
 	}
+	
 	public DravView(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
 		Init();
 	}
+	
 	private void Init()
 	{
-		m_paint=new Paint(Paint.ANTI_ALIAS_FLAG);
-		m_paint.setColor(Color.RED);
+		fPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		fPaint.setColor(Color.RED);
+		lPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		lPaint.setColor(Color.WHITE);
 	}
-	public void setPos(float x,float y)
-	{
 
-		m_x=x+150;
-		m_y=y+150;
-		invalidate();
-	}
 	
 	@Override
-	public void onDraw(Canvas canvas)
-	{
-		main.a=1;main.b=1;main.c=1;
+	public void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		int i;
-		for(i=-149;i<150;i++)
-		{
-			float y= main.a*(i*i)+main.b*i+main.c;
-			setPos(i,y);
-		canvas.drawCircle(m_x, m_y, 5, m_paint);
+		float vWidth = this.getWidth();
+		float vHeight = this.getHeight();
+		
+		canvas.drawLine(vWidth / 2f, 0f, vWidth / 2f, vHeight, lPaint);
+		canvas.drawLine(0f, vHeight / 2f, vWidth, vHeight / 2f, lPaint);
+		
+		for(int i = 1; i < vWidth / 2f / UNIT; i++) {
+			canvas.drawLine(
+					vWidth / 2f - i * UNIT,
+					vHeight / 2f - UNIT / 3f, 
+					vWidth / 2f - i * UNIT, 
+					vHeight / 2f + UNIT / 3f, 
+					lPaint
+			);
+			
+			if(i == (int)(vWidth / 2f / UNIT)) break;
+				
+			canvas.drawLine(
+					vWidth / 2f + i * UNIT,
+					vHeight / 2f - UNIT / 3f, 
+					vWidth / 2f + i * UNIT, 
+					vHeight / 2f + UNIT / 3f, 
+					lPaint
+			);
 		}
+		
+		for(int i = 1; i < vHeight / 2f / UNIT; i++) {
+			canvas.drawLine(
+					vWidth / 2f - UNIT / 3f,
+					vHeight / 2f + i * UNIT, 
+					vWidth / 2f + UNIT / 3f,
+					vHeight / 2f + i * UNIT,  
+					lPaint
+			);
+			
+			if(i == (int)(vHeight / 2f / UNIT)) break;
+			
+			canvas.drawLine(
+					vWidth / 2f - UNIT / 3f,
+					vHeight / 2f - i * UNIT, 
+					vWidth / 2f + UNIT / 3f,
+					vHeight / 2f - i * UNIT,  
+					lPaint
+			);
+		}
+		canvas.drawLine(vWidth / 2f, 0f, vWidth / 2f + UNIT / 2f, UNIT / 3f, lPaint);
+		canvas.drawLine(vWidth / 2f, 0f, vWidth / 2f - UNIT / 2f, UNIT / 3f, lPaint);
+		
+		canvas.drawLine(vWidth, vHeight / 2f, vWidth - UNIT / 3f, vHeight / 2f - UNIT / 2f, lPaint);
+		canvas.drawLine(vWidth, vHeight / 2f, vWidth - UNIT / 3f, vHeight / 2f + UNIT / 2f, lPaint);
 	}
 }
