@@ -2,7 +2,9 @@ package com.example.funkc;
 
 																//Za³adowanie pakietów 
 import com.example.funkc.MainActivity;
+
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,6 +22,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		Button btn = (Button) findViewById(R.id.button1);
 		btn.setOnClickListener(new CalcButtonListener());
